@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Neeraj Bansal's | Patient Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0, transparent 50%), 
+                              radial-gradient(at 50% 0%, rgba(99, 102, 241, 0.05) 0, transparent 50%);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .custom-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+
+        .notification-enter {
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .fixed-badge {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-card-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .desktop-only { display: none; }
+        }
+    </style>
+</head>
+<body class="text-slate-900 antialiased">
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="fixed top-6 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-[100] flex flex-col gap-3 w-[90%] md:w-auto pointer-events-none"></div>
+
+    <div class="min-h-screen selection:bg-green-100 selection:text-green-900">
+        <main class="w-full">
+            <div class="p-4 md:p-10 lg:p-16 max-w-6xl mx-auto">
+                
+                <!-- Premium Branding -->
+                <div class="flex items-center justify-between gap-4 mb-12">
+                    <div class="flex items-center gap-3 md:gap-4">
+                        <div class="relative">
+    
+    <!-- Soft Glow -->
+    <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-blue-500 rounded-3xl blur-sm opacity-20"></div>
+
+    <!-- Logo Card -->
+    <div class="relative bg-white p-2 md:p-3 rounded-3xl shadow-md border border-slate-100 flex items-center justify-center">
+        
+        <img 
+            src="https://drneerajchildcare.in/assets/im-rE7a75sp.png"
+            alt="Dr Neeraj Logo"
+            class="w-10 h-10 md:w-12 md:h-12 object-contain"
+        >
+
+    </div>
+
+</div>
+                        <div>
+                            <span class="font-extrabold text-xl md:text-2xl tracking-tight text-slate-900 block leading-none">Dr. Neeraj Bansal's</span>
+                            <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-green-500 mt-1 block">Child Care Centra</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <!-- Reload Button - Mobile Optimized & Beautiful -->
+                        <button onclick="window.location.reload()" class="flex items-center gap-2 bg-white/70 backdrop-blur-md hover:bg-white text-green-600 px-4 py-2.5 md:px-5 md:py-3 rounded-2xl border border-white shadow-lg shadow-green-100/50 transition-all active:scale-90 group font-bold text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:rotate-180 transition-transform duration-700 ease-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                            <span class="hidden sm:inline">Refresh Registry</span>
+                        </button>
+                    </div>
+                </div>
+
+                <header class="mb-8 text-center md:text-left">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">Patient Registry</h2>
+                    <p class="text-slate-500 mt-2 text-lg font-medium">Search and assign appointment numbers efficiently.</p>
+                </header>
+
+                <!-- Filter & Search Section -->
+                <div class="mb-8">
+                    <div class="glass-card rounded-3xl p-2 custom-shadow flex flex-col md:flex-row items-center gap-2 border-white/50">
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="searchInput" 
+                                oninput="renderPatients()"
+                                placeholder="Filter by name, father's name, or mobile number..." 
+                                class="w-full pl-14 pr-6 py-4 bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-slate-900 font-bold placeholder:text-slate-400 placeholder:font-medium"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive Content Area -->
+                <div id="contentArea" class="space-y-4">
+                    <!-- Desktop View (Table) -->
+                    <div class="hidden md:block glass-card rounded-[2.5rem] custom-shadow overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50/40 border-b border-slate-100/50">
+                                    <th class="px-8 py-6 text-xs font-bold text-slate-400 uppercase tracking-widest">Patient</th>
+                                    <th class="px-8 py-6 text-xs font-bold text-slate-400 uppercase tracking-widest">Father's Name</th>
+                                    <th class="px-8 py-6 text-xs font-bold text-slate-400 uppercase tracking-widest">Contact & Gender</th>
+                                    <th class="px-8 py-6 text-xs font-bold text-slate-400 uppercase tracking-widest">Appointment #</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientListDesktop" class="divide-y divide-slate-100/50">
+                                <!-- JS populated -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile View (Cards) -->
+                    <div id="patientListMobile" class="md:hidden space-y-4">
+                        <!-- JS populated -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden glass-card rounded-[2.5rem] p-16 text-center custom-shadow">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-slate-50 text-slate-300 mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <p class="text-slate-400 font-bold text-xl">No matching records found</p>
+                        <p class="text-slate-400 mt-1 font-medium">Try adjusting your search filters.</p>
+                    </div>
+                </div>
+
+                <!-- Footer Stats -->
+                <div class="mt-10 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
+                    <div class="flex items-center gap-6 text-sm text-slate-500 font-bold uppercase tracking-wider">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-green-600 shadow-lg shadow-green-200"></span>
+                            <span>Assigned</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-white border-2 border-slate-200"></span>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 backdrop-blur px-6 py-2.5 rounded-2xl border border-white text-sm font-bold shadow-sm">
+                        Showing: <span class="text-green-600 ml-1" id="totalCount">0</span> patients
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mock Patient Data
+        let patients = [];
+
+        async function loadPatients() {
+
+            const res = await fetch("/api/patientsx/67ee5e1bde4cb48c515073ee");
+            const data = await res.json();
+
+            patients = data;
+            renderPatients();
+        }
+
+
+let pendingAssign = null;
+
+
+
+        function renderPatients() {
+            const desktopList = document.getElementById('patientListDesktop');
+            const mobileList = document.getElementById('patientListMobile');
+            const emptyState = document.getElementById('emptyState');
+            const totalCount = document.getElementById('totalCount');
+            const searchInput = document.getElementById('searchInput');
+            
+            const query = searchInput.value.toLowerCase().trim();
+
+            // Filter logic
+            const filteredPatients = patients.filter(p => {
+                return p.name.toLowerCase().includes(query) || 
+                       p.fatherName.toLowerCase().includes(query) || 
+                       p.mobile.includes(query);
+            });
+
+            totalCount.textContent = filteredPatients.length;
+
+            if (filteredPatients.length === 0) {
+                desktopList.innerHTML = '';
+                mobileList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            // Render Desktop
+            desktopList.innerHTML = filteredPatients.map(p => `
+                <tr class="group hover:bg-white/40 transition-all">
+                    <td class="px-8 py-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl ${p.appointmentNo ? 'bg-green-600 text-white rotate-3 shadow-lg shadow-green-200' : 'bg-green-50 text-green-500'} flex items-center justify-center font-extrabold transition-all group-hover:scale-105">
+                                ${p.name.charAt(0)}
+                            </div>
+                            <span class="font-bold text-slate-900">${highlight(p.name, query)}</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <span class="text-sm font-semibold text-slate-700">${highlight(p.fatherName, query)}</span>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-600">${highlight(p.mobile, query)}</div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">${p.gender}</div>
+                    </td>
+                    <td class="px-8 py-6">
+                        ${renderAppointmentSlot(p, 'desktop')}
+                    </td>
+                </tr>
+            `).join('');
+
+            // Render Mobile
+            mobileList.innerHTML = filteredPatients.map(p => `
+                <div class="glass-card rounded-[2rem] p-6 custom-shadow space-y-5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl ${p.appointmentNo ? 'bg-green-600 text-white' : 'bg-green-50 text-green-500'} flex items-center justify-center font-extrabold shadow-sm transition-all">
+                            ${p.name.charAt(0)}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 leading-none">${highlight(p.name, query)}</h3>
+                            <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Father: ${highlight(p.fatherName, query)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-sm py-3 border-y border-slate-100/50">
+                        <span class="text-slate-400 font-bold uppercase text-[10px]">Contact</span>
+                        <span class="font-bold text-slate-700">${highlight(p.mobile, query)}</span>
+                    </div>
+
+                    <div class="pt-1">
+                        ${renderAppointmentSlot(p, 'mobile')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search highlighting helper
+        function highlight(text, query) {
+            if (!query) return text;
+            const re = new RegExp(`(${query})`, "gi");
+            return text.replace(re, `<mark class="bg-green-100 text-green-700 p-0 rounded">$1</mark>`);
+        }
+
+        function renderAppointmentSlot(p, mode) {
+            if (p.appointmentNo) {
+                return `
+                    <div class="fixed-badge inline-flex items-center justify-between w-full md:w-auto bg-green-700 text-white pl-5 pr-3 py-2.5 rounded-2xl shadow-lg shadow-green-100">
+                        <span class="font-extrabold text-sm tracking-tight italic">#${p.appointmentNo}</span>
+                       
+                    </div>
+                `;
+            } else {
+                const inputId = `input-${mode}-${p.id}`;
+                return `
+                    <div class="flex items-center gap-2 group/input">
+                        <input 
+                            type="text" 
+                            id="${inputId}"
+                            placeholder="Assign #" 
+                            class="w-full md:w-48 px-4 py-3 text-sm bg-white border-2 border-slate-100 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 focus:outline-none transition-all font-bold placeholder:text-slate-300"
+                            onkeypress="if(event.key === 'Enter') confirmAssign('${p.id}', '${p.name}', '${inputId}', '${p.mobile}')"
+                        >
+                        <button 
+                            onclick="confirmAssign('${p.id}', '${p.name}', '${inputId}', '${p.mobile}')"
+                            class="bg-green-600 hover:bg-green-700 text-white p-3.5 rounded-2xl transition-all active:scale-90 flex-shrink-0 shadow-lg shadow-green-100"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            const isSuccess = type === 'success';
+            
+            notification.className = `glass-card ${isSuccess ? 'border-green-200' : 'border-rose-200'} px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-4 min-w-[280px] notification-enter pointer-events-auto ring-1 ring-black/5`;
+            notification.innerHTML = `
+                <div class="w-10 h-10 rounded-2xl ${isSuccess ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'} flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${isSuccess ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"></path></svg>
+                </div>
+                <div>
+                    <p class="font-extrabold text-slate-900 text-sm leading-tight">${message}</p>
+                </div>
+            `;
+            container.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px) scale(0.95)';
+                notification.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        async function submitRowAppointment(id, name, inputId, mobile) {
+
+    const input = document.getElementById(inputId);
+    const val = input.value.trim();
+
+    if (!val) {
+        showNotification(`Entry missing for ${name}`, "error");
+        return;
+    }
+
+    showLoading();
+
+    await fetch("/api/assign", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: id,
+            name:name,
+            mobile:mobile,
+            number: val
+        })
+    });
+
+    hideLoading();
+
+    showNotification(`Locked: #${val}`);
+    loadPatients();
+}
+
+
+
+function confirmAssign(id, name, inputId, mobile) {
+
+    const input = document.getElementById(inputId);
+    const val = input.value.trim();
+
+    if (!val) {
+        showNotification(`Entry missing for ${name}`, "error");
+        return;
+    }
+
+    pendingAssign = { id, name, inputId, mobile };
+
+    document.getElementById("confirmText").innerHTML =
+        `Assign token <b>#${val}</b> to <b>${name}</b>?`;
+
+    const modal = document.getElementById("confirmModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+}
+
+function closeConfirm(){
+    const modal = document.getElementById("confirmModal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+}
+
+
+
+function confirmAppointment(){
+
+    if(!pendingAssign) return;
+
+    submitRowAppointment(
+        pendingAssign.id,
+        pendingAssign.name,
+        pendingAssign.inputId,
+        pendingAssign.mobile
+    );
+
+    closeConfirm();
+}
+
+
+
+function showLoading(){
+    const el = document.getElementById("loadingOverlay");
+    el.classList.remove("hidden");
+    el.classList.add("flex");
+}
+
+function hideLoading(){
+    const el = document.getElementById("loadingOverlay");
+    el.classList.add("hidden");
+    el.classList.remove("flex");
+}
+    
+
+        window.onload = loadPatients;
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <div id="confirmModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
+
+    <div class="bg-white rounded-2xl p-6 w-[320px] shadow-lg text-center">
+
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Confirm Appointment</h3>
+
+        <p id="confirmText" class="text-slate-500 text-sm mb-6">
+            Are you sure you want to assign this number?
+        </p>
+
+        <div class="flex gap-3 justify-center">
+
+            <button onclick="closeConfirm()" 
+            class="px-4 py-2 rounded-xl border text-slate-600 hover:bg-slate-100">
+                Cancel
+            </button>
+
+            <button onclick="confirmAppointment()" id="confirmBtn"
+            class="px-4 py-2 rounded-xl bg-green-600 text-white hover:bg-green-700">
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="loadingOverlay" class="fixed inset-0 hidden items-center justify-center bg-black/30 backdrop-blur-sm z-[60]">
+    
+    <div class="bg-white px-6 py-5 rounded-2xl flex items-center gap-4 shadow-xl">
+        
+        <svg class="animate-spin h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none">
+            <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-80" fill="currentColor" d="M12 2a10 10 0 0 1 10 10h-4a6 6 0 0 0-6-6z"></path>
+        </svg>
+
+        <span class="font-semibold text-slate-700">Assigning token...</span>
+
+    </div>
+
+</div>
+</body>
+</html>
