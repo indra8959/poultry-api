@@ -103,7 +103,7 @@ atexit.register(lambda: scheduler.shutdown())
 
 @app.route("/")
 def home():
-    return "updated 6.7"
+    return "updated 1.0"
 
 def is_recent(timestamp):
                 timestamp = int(timestamp)  # Ensure it's an integer
