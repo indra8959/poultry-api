@@ -503,7 +503,7 @@ def calculate_expense():
         "finalAmount": round(final_amount, 2)
     })
 
-    paymentled = 'IDFC Bank'
+    paymentled = 'HDFC Bank'
     paymentcode = 'A4'
 
     voucher_type = 'Journal'
@@ -536,7 +536,7 @@ def calculate_expense():
         paymentcode = 'A11'
         voucher_type = 'Payment'
     elif data.get('paymentMode')=='Bank':
-        paymentled = 'IDFC Bank'
+        paymentled = 'HDFC Bank'
         paymentcode = 'A4'
         voucher_type = 'Payment'
         bankref = data.get('bankref')
