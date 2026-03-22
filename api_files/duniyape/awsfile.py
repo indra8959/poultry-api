@@ -5,10 +5,10 @@ from botocore.exceptions import NoCredentialsError, ClientError
 
 aws_bp = Blueprint("aws_bp", __name__)
 
-AWS_ACCESS_KEY = "AKIAZVK5JOP7HUCRINR2"
-AWS_SECRET_KEY = "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"
+AWS_ACCESS_KEY = "AKIA5QZ6C722GTBGTXE6"
+AWS_SECRET_KEY = "V+0N4EbpM9mwyoeaXTWQa32Tty+1623X73CEdH5O"
 AWS_REGION = "eu-north-1"  # e.g. ap-south-1 for Mumbai
-S3_BUCKET = "c2c-files-bucket"
+S3_BUCKET = "poultry-files-bucket"
 
 # Initialize boto3 client
 s3 = boto3.client(
