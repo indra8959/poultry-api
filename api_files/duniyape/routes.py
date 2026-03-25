@@ -372,11 +372,29 @@ def get_ledger_entries2(ledger_id, emp_name):
         return jsonify({"error": "Invalid date format, use YYYY-MM-DD"}), 400
 
     # Helper → opening balance calc
-    def calc_opening(cursor, mapped_id):
+    # def calc_opening(cursor, mapped_id):
+    #     total = 0
+    #     for doc in cursor:
+    #         for entry in doc.get("entries", []):
+    #             if entry.get("ledger_id") == mapped_id:
+    #                 total += entry.get("debit", 0) - entry.get("credit", 0)
+    #     return total
+
+    def calc_opening(cursor, mapped_id, emp_name):
         total = 0
         for doc in cursor:
             for entry in doc.get("entries", []):
                 if entry.get("ledger_id") == mapped_id:
+    
+                    emp_id = entry.get("employee_id", "")
+                    emp_n = entry.get("employee_name", "").lower()
+    
+                    # ✅ SAME EMPLOYEE FILTER APPLY HERE
+                    if emp_name and not (
+                        emp_name == emp_id or emp_name.lower() in emp_n
+                    ):
+                        continue
+    
                     total += entry.get("debit", 0) - entry.get("credit", 0)
         return total
 
@@ -385,7 +403,7 @@ def get_ledger_entries2(ledger_id, emp_name):
     if from_date:
         if mapped_id:
             q = {"entries.ledger_id": mapped_id, "date": {"$lt": from_date}}
-            opening_balance += calc_opening(vouchers.find(q), mapped_id)
+            opening_balance += calc_opening(vouchers.find(q), mapped_id, emp_name)
 
    
     # ---------------- Build Query ----------------
