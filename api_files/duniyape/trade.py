@@ -43,6 +43,63 @@ def get_products():
         d["_id"] = str(d["_id"])
     return jsonify(designations), 200
 
+@trade_bp.route("/categories/<action>", methods=["POST"])
+def handle_categories(action):
+    data = request.get_json() or {}
+
+    # 🔹 GET ALL
+    if action == "get":
+        categories = list(db.categories.find({}))
+        for c in categories:
+            c["_id"] = str(c["_id"])
+        return jsonify(categories), 200
+
+
+    # 🔹 ADD CATEGORY
+    elif action == "add":
+        if "name" not in data:
+            return jsonify({"error": "Category name is required"}), 400
+
+        # Prevent duplicate
+        existing = db.categories.find_one({"name": data["name"]})
+        if existing:
+            return jsonify({"error": "Category already exists"}), 400
+
+        category = {
+            "name": data["name"],
+            "created_at": datetime.utcnow()
+        }
+
+        result = db.categories.insert_one(category)
+        category["_id"] = str(result.inserted_id)
+
+        return jsonify({
+            "message": "Category added successfully",
+            "category": category
+        }), 201
+
+
+    # 🔹 DELETE CATEGORY
+    elif action == "delete":
+        if "id" not in data:
+            return jsonify({"error": "Category id is required"}), 400
+
+        try:
+            result = db.categories.delete_one({
+                "_id": ObjectId(data["id"])
+            })
+
+            if result.deleted_count == 0:
+                return jsonify({"error": "Category not found"}), 404
+
+            return jsonify({"message": "Category deleted successfully"}), 200
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+
+
+    else:
+        return jsonify({"error": "Invalid action"}), 400
 
 
 @trade_bp.route("/billing", methods=["POST"])
