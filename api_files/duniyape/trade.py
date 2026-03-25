@@ -101,7 +101,6 @@ def handle_categories(action):
     else:
         return jsonify({"error": "Invalid action"}), 400
 
-
 @trade_bp.route("/billing", methods=["POST"])
 def create_billing():
     """
@@ -372,11 +371,25 @@ def get_merged_data():
         # --- Get Customers ---
         customers = list(db.customers.find({}))
         customers = convert_objectid(customers)
+        for c in customers:
+            c["usertype"] = "customers"
+            
         merged.extend(customers)
+
+        vendors = list(db.vendors.find({}))
+        vendors = convert_objectid(vendors)
+        for c in vendors:
+            c["usertype"] = "vendors"
+            
+        merged.extend(vendors)
+
 
         # --- Get Staff ---
         staff = list(db.staff.find({}))
         staff = convert_objectid(staff)
+        for c in staff:
+            c["usertype"] = "staff"
+            
         merged.extend(staff)
 
         return jsonify(merged), 200
@@ -387,7 +400,49 @@ def get_merged_data():
             "details": str(e)
         }), 500
 
+@trade_bp.route("/assign-data/<id>", methods=["POST"])
+def assign_update_data(id):
+    try:
+        data = request.json
+        record_type = data.get("usertype")
 
+        if not record_type:
+            return jsonify({"error": "type is required (customer/staff)"}), 400
+
+        # remove type from update fields
+        update_fields = {k: v for k, v in data.items() if k != "usertype"}
+
+        if not update_fields:
+            return jsonify({"error": "No fields to update"}), 400
+
+        # choose collection
+        if record_type == "customers":
+            collection = db.customers
+        elif record_type == "staff":
+            collection = db.staff
+        elif record_type == "vendors":
+            collection = db.vendors
+        else:
+            return jsonify({"error": "Invalid type"}), 400
+
+        # update
+        result = collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": update_fields}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"error": "Record not found"}), 404
+
+        return jsonify({
+            "message": f"{record_type} updated successfully"
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": "Server error",
+            "details": str(e)
+        }), 500
 
 # ✅ Create or Edit Staff (single API)
 @trade_bp.route("/create", methods=["POST"])
@@ -560,7 +615,7 @@ def calculate_expense():
         "finalAmount": round(final_amount, 2)
     })
 
-    paymentled = 'HDFC Bank'
+    paymentled = 'IDFC Bank'
     paymentcode = 'A4'
 
     voucher_type = 'Journal'
@@ -593,7 +648,7 @@ def calculate_expense():
         paymentcode = 'A11'
         voucher_type = 'Payment'
     elif data.get('paymentMode')=='Bank':
-        paymentled = 'HDFC Bank'
+        paymentled = 'IDFC Bank'
         paymentcode = 'A4'
         voucher_type = 'Payment'
         bankref = data.get('bankref')
