@@ -648,7 +648,7 @@ def calculate_expense():
         paymentcode = 'A11'
         voucher_type = 'Payment'
     elif data.get('paymentMode')=='Bank':
-        paymentled = 'IDFC Bank'
+        paymentled = 'HDFC Bank'
         paymentcode = 'A4'
         voucher_type = 'Payment'
         bankref = data.get('bankref')
@@ -664,8 +664,8 @@ def calculate_expense():
             dvendor = 'Indrajeet Ajit'
             dvendorid = '69394a96d0d7415a7087cf1f'
     else:
-        paymentled = 'Vendor Accounts'
-        paymentcode = 'A19'
+        paymentled = data.get('CreditLedgerName')
+        paymentcode = data.get('CreditLedger')
         voucher_type = 'Journal'
         voucher_mode = 'Journal'
 
